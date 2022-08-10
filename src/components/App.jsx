@@ -41,7 +41,7 @@ class App extends Component {
       filter: event.currentTarget.value,
     });
   };
-
+  
   addContact = data => {
     return this.state.contacts.map(contact => contact.name).includes(data.name)
       ? alert(`${data.name} is already in contacts`)
@@ -52,6 +52,9 @@ class App extends Component {
 
   render() {
     const { contacts, filter } = this.state;
+    const visibleContacts = this.state.contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase()));
+    
     return (
       <div className={style.container}>
         <h1>Phonebook</h1>
@@ -59,7 +62,7 @@ class App extends Component {
         <h2>Contacts</h2>
         <Filter filter={filter} handleChange={this.handleFilterChange} />
         <Contacts
-          contacts={contacts}
+          contacts={visibleContacts}
           filter={filter}
           deleteContact={this.deleteContact}
         />
