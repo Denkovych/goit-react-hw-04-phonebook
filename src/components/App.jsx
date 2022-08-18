@@ -31,41 +31,36 @@ function App ()  {
   }, [contacts, firstRender]);
 
   const deleteContact = id => {
-    this.setState({
-      contacts: [...this.state.contacts.filter(contact => contact.id !== id)],
-    });
+    setContacts([...contacts.filter(contact => contact.id !== id)]);
   };
 
  const handleFilterChange = event => {
-    this.setState({
-      filter: event.currentTarget.value,
-    });
+  setFilter(event.target.value)
   };
   
  const addContact = data => {
-    return this.state.contacts.map(contact => contact.name).includes(data.name)
-      ? alert(`${data.name} is already in contacts`)
-      : this.setState(prevState => ({
-          contacts: [...prevState.contacts, data],
-        }));
+  return contacts.map(contact => contact.name).includes(data.name)
+  ? alert(`${data.name} is already in contacts`)
+  : setContacts(prevState => [...prevState, data]);
   };
 
- 
+  const visibleContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase()));
     
     return (
       <div className={style.container}>
         <h1>Phonebook</h1>
-        <ContactForm addContact={this.addContact} contacts={contacts} />
+        <ContactForm addContact={addContact} contacts={contacts} />
         <h2>Contacts</h2>
-        <Filter filter={filter} handleChange={this.handleFilterChange} />
+        <Filter filter={filter} handleChange={handleFilterChange} />
         <Contacts
           contacts={visibleContacts}
           filter={filter}
-          deleteContact={this.deleteContact}
+          deleteContact={deleteContact}
         />
       </div>
     );
   }
-}
+
 
 export { App };
