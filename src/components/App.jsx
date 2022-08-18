@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 
 import { ContactForm } from 'components/ContactForm/ContactForm';
 import Contacts from 'components/ContactList/ContactList';
@@ -7,42 +7,42 @@ import style from './App.module.css';
 
 import { nanoid } from 'nanoid';
 
-class App extends Component {
-  state = {
-    contacts: [
-      { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56' },
-      { id: nanoid(), name: 'Hermione Kline', number: '443-89-12' },
-      { id: nanoid(), name: 'Eden Clements', number: '645-17-79' },
-      { id: nanoid(), name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filter: '',
-  };
+function App ()  {
+  const [contacts, setContacts] = useState([
+    { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56' },
+    { id: nanoid(), name: 'Hermione Kline', number: '443-89-12' },
+    { id: nanoid(), name: 'Eden Clements', number: '645-17-79' },
+    { id: nanoid(), name: 'Annie Copeland', number: '227-91-26' },
+  ]);
+  const [filter, setFilter] = useState('');
+  const [firstRender, setFirstRender] = useState(true);
 
-  componentDidMount() {
+   useLayoutEffect(() => {
     const localContacts = JSON.parse(localStorage.getItem('contacts'));
-    localContacts &&
-      this.setState({
-        contacts: [...localContacts],
-      });
-  }
+    localContacts && setContacts([...localContacts]);
+  }, []);
 
-  componentDidUpdate(prevProps, prevState) {
-    localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-  }
+ useEffect(() => {
+    if (firstRender) {
+      setFirstRender(false);
+      return;
+    }
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts, firstRender]);
 
-  deleteContact = id => {
+  const deleteContact = id => {
     this.setState({
       contacts: [...this.state.contacts.filter(contact => contact.id !== id)],
     });
   };
 
-  handleFilterChange = event => {
+ const handleFilterChange = event => {
     this.setState({
       filter: event.currentTarget.value,
     });
   };
   
-  addContact = data => {
+ const addContact = data => {
     return this.state.contacts.map(contact => contact.name).includes(data.name)
       ? alert(`${data.name} is already in contacts`)
       : this.setState(prevState => ({
@@ -50,10 +50,7 @@ class App extends Component {
         }));
   };
 
-  render() {
-    const { contacts, filter } = this.state;
-    const visibleContacts = this.state.contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase()));
+ 
     
     return (
       <div className={style.container}>
