@@ -19,7 +19,7 @@ function App ()  {
 
    useLayoutEffect(() => {
     const localContacts = JSON.parse(localStorage.getItem('contacts'));
-    localContacts && setContacts([...localContacts]);
+    localContacts && setContacts(localContacts);
   }, []);
 
  useEffect(() => {
@@ -31,7 +31,7 @@ function App ()  {
   }, [contacts, firstRender]);
 
   const deleteContact = id => {
-    setContacts([...contacts.filter(contact => contact.id !== id)]);
+    setContacts(contacts.filter(contact => contact.id !== id));
   };
 
  const handleFilterChange = event => {
